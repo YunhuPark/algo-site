@@ -7,6 +7,8 @@ export interface Post {
   permalink: string;
   timestamp: string;
   mediaType: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+  likeCount: number;
+  commentsCount: number;
 }
 
 export async function getPosts(limit = 18): Promise<Post[]> {
@@ -16,7 +18,7 @@ export async function getPosts(limit = 18): Promise<Post[]> {
 
   try {
     const res = await fetch(
-      `${BASE}/${userId}/media?fields=id,caption,media_url,media_type,permalink,timestamp&access_token=${token}&limit=${limit}`,
+      `${BASE}/${userId}/media?fields=id,caption,media_url,media_type,permalink,timestamp,like_count,comments_count&access_token=${token}&limit=${limit}`,
       { next: { revalidate: 3600 } },
     );
     if (!res.ok) return [];
@@ -49,6 +51,8 @@ export async function getPosts(limit = 18): Promise<Post[]> {
         permalink: item.permalink,
         timestamp: item.timestamp,
         mediaType: item.media_type,
+        likeCount: item.like_count ?? 0,
+        commentsCount: item.comments_count ?? 0,
       });
     }
 

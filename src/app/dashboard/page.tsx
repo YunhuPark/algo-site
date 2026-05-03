@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import fs from 'fs';
 import path from 'path';
+import { getPosts } from '@/lib/instagram';
 
 interface PostMeta {
   topic: string;
@@ -38,8 +39,10 @@ function formatTime(sec: number) {
   return m > 0 ? `${m}분 ${s}초` : `${s}초`;
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   const all = loadMeta();
+  const igPosts = await getPosts(50);
+  const igById = Object.fromEntries(igPosts.map((p) => [p.id, p]));
   const published = all.filter((p) => p.ig_post_id);
   const withFact = all.filter((p) => p.fact_confirmed + p.fact_disputed + p.fact_unverifiable > 0);
   const totalFacts = withFact.reduce((a, p) => a + p.fact_confirmed + p.fact_disputed + p.fact_unverifiable, 0);
@@ -99,10 +102,12 @@ export default function DashboardPage() {
 
           <div className="border border-[#1a1a1a] divide-y divide-[#1a1a1a]">
             {/* 헤더 */}
-            <div className="grid grid-cols-[1fr_90px_80px_60px] gap-4 px-5 py-3 bg-[#0d0d0d]">
+            <div className="grid grid-cols-[1fr_90px_80px_50px_50px_60px] gap-4 px-5 py-3 bg-[#0d0d0d]">
               <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest">주제</p>
               <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest">날짜</p>
               <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest text-right">팩트</p>
+              <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest text-right">좋아요</p>
+              <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest text-right">댓글</p>
               <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest text-right">상태</p>
             </div>
 
@@ -110,11 +115,12 @@ export default function DashboardPage() {
               const total = post.fact_confirmed + post.fact_disputed + post.fact_unverifiable;
               const rate = total > 0 ? Math.round((post.fact_confirmed / total) * 100) : null;
               const isPublished = !!post.ig_post_id;
+              const igData = post.ig_post_id ? igById[post.ig_post_id] : null;
 
               return (
                 <div
                   key={i}
-                  className="grid grid-cols-[1fr_90px_80px_60px] gap-4 px-5 py-4 hover:bg-[#0d0d0d] transition-colors"
+                  className="grid grid-cols-[1fr_90px_80px_50px_50px_60px] gap-4 px-5 py-4 hover:bg-[#0d0d0d] transition-colors"
                 >
                   {/* 주제 */}
                   <div className="min-w-0">
@@ -134,11 +140,7 @@ export default function DashboardPage() {
                   {/* 팩트 확인율 */}
                   <div className="self-center text-right">
                     {rate !== null ? (
-                      <span
-                        className={`text-[11px] font-mono ${
-                          rate >= 80 ? 'text-emerald-600' : rate >= 50 ? 'text-yellow-600' : 'text-red-700'
-                        }`}
-                      >
+                      <span className={`text-[11px] font-mono ${rate >= 80 ? 'text-emerald-600' : rate >= 50 ? 'text-yellow-600' : 'text-red-700'}`}>
                         {rate}%
                       </span>
                     ) : (
@@ -146,15 +148,21 @@ export default function DashboardPage() {
                     )}
                   </div>
 
+                  {/* 좋아요 */}
+                  <p className="text-[11px] font-mono text-zinc-500 self-center text-right">
+                    {igData ? igData.likeCount : '—'}
+                  </p>
+
+                  {/* 댓글 */}
+                  <p className="text-[11px] font-mono text-zinc-500 self-center text-right">
+                    {igData ? igData.commentsCount : '—'}
+                  </p>
+
                   {/* 상태 */}
                   <div className="self-center text-right">
                     {isPublished ? (
-                      <a
-                        href={post.permalink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors"
-                      >
+                      <a href={post.permalink} target="_blank" rel="noopener noreferrer"
+                        className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors">
                         발행 ↗
                       </a>
                     ) : (
