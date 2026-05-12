@@ -1,5 +1,19 @@
 [
   {
+    "topic": "AI 윤리 논쟁",
+    "source_title": "How ChatGPT adoption broadened in early 2026",
+    "source_url": "https://openai.com/signals/research/2026q1-update",
+    "angle": "공감",
+    "fact_confirmed": 0,
+    "fact_disputed": 1,
+    "fact_unverifiable": 1,
+    "generation_seconds": 1068,
+    "ig_post_id": "",
+    "permalink": "",
+    "posted_at": "2026-05-12 14:33:18",
+    "folder": "20260512_1340_ChatGPT_사용자_확대"
+  },
+  {
     "topic": "AI와 윤리",
     "source_title": "How ChatGPT adoption broadened in early 2026",
     "source_url": "https://openai.com/signals/research/2026q1-update",
