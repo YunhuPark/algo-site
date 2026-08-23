@@ -6,12 +6,12 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: '알고 — AI 카드뉴스',
-  description: 'GPT-4o와 Tavily가 매일 최신 AI 뉴스를 수집하고, DALL-E 3가 디자인해 Instagram에 자동 업로드합니다.',
+  title: 'Algo Pipeline — Reliability Console',
+  description: 'LLM 콘텐츠 파이프라인의 Quality Gate, DB 격리, 실패 상태와 Dry-run 검증을 보여주는 AI Engineer 포트폴리오 콘솔.',
   openGraph: {
-    title: '알고 — AI 카드뉴스',
-    description: 'AI가 매일 만드는 카드뉴스',
-    siteName: '알고',
+    title: 'Algo Pipeline — Reliability Console',
+    description: '104 tests · production DB mutation 0 · unsupported numeric claim blocked · publish disabled',
+    siteName: 'Algo Pipeline Reliability Console',
   },
 };
 
