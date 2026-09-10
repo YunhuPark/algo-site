@@ -7,10 +7,10 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 
 export const metadata: Metadata = {
   title: 'Algo Pipeline — Reliability Console',
-  description: 'LLM 콘텐츠 파이프라인의 Quality Gate, DB 격리, 실패 상태와 Dry-run 검증을 보여주는 AI Engineer 포트폴리오 콘솔.',
+  description: 'Queue Lineage V2, Fact Checker V2, durable publish boundary와 사람 승인 기반 운영 구조를 보여주는 evidence-bound AI content agent console.',
   openGraph: {
     title: 'Algo Pipeline — Reliability Console',
-    description: '104 tests · production DB mutation 0 · unsupported numeric claim blocked · publish disabled',
+    description: '198 tests on hardened main · Queue Lineage V2 · Fact Checker V2 · unattended publish OFF',
     siteName: 'Algo Pipeline Reliability Console',
   },
 };

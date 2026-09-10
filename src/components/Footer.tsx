@@ -5,15 +5,10 @@ export default function Footer() {
         <div>
           <p className="text-xs font-mono text-zinc-500">ALGO PIPELINE — RELIABILITY CONSOLE</p>
           <p className="text-xs text-zinc-700 mt-1">
-            Draft hardening branch · offline verification · publish disabled
+            Hardened main · staged rollout · unattended publish off by default
           </p>
         </div>
-        <a
-          href="https://github.com/YunhuPark/algo-pipeline"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors duration-200"
-        >
+        <a href="https://github.com/YunhuPark/algo-pipeline" target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors duration-200">
           Source repository ↗
         </a>
       </div>

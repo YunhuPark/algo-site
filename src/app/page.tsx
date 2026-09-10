@@ -2,40 +2,48 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const METRICS = [
-  { value: '104', label: 'tests passed', note: 'quality hardening branch' },
-  { value: '0', label: 'prod DB mutations', note: 'pytest + sandbox audit' },
-  { value: 'BLOCKED', label: 'unsupported number', note: 'NUMBER_UNSUPPORTED' },
-  { value: 'OFF', label: 'external publish', note: 'dry-run protection' },
+  { value: '198', label: 'main tests passed', note: 'Instagram auth hardening merge' },
+  { value: 'V2', label: 'queue + fact check', note: 'lineage + evidence contract' },
+  { value: 'BLOCKED', label: 'unsupported number', note: 'deterministic verifier' },
+  { value: 'OFF', label: 'unattended publish', note: 'staged rollout default' },
 ];
 
 const FLOW = [
-  ['01', 'COLLECT', '기사와 근거 후보를 수집합니다.'],
-  ['02', 'GENERATE', 'Claim과 콘텐츠 초안을 생성합니다.'],
-  ['03', 'VERIFY', '숫자·근거·형식·의미를 분리해 검사합니다.'],
-  ['04', 'OPERATE', '상태·재시도·DB·발행 경계를 통제합니다.'],
+  ['01', 'COLLECT', '원문과 보조 출처를 수집하고 출처 metadata를 남깁니다.'],
+  ['02', 'GENERATE', 'Claim과 카드뉴스 초안을 생성합니다.'],
+  ['03', 'VERIFY', 'Queue lineage, 수치 근거, schema, 의미 품질을 분리해 검사합니다.'],
+  ['04', 'REVIEW', '사람 편집·승인 뒤에만 게시 후보가 됩니다.'],
+  ['05', 'PUBLISH', 'durable attempt와 원격 ID 상태를 기준으로 게시 상태를 확정합니다.'],
 ];
 
 const CHECKS = [
   {
-    label: 'DETERMINISTIC GATE',
-    title: '근거 없는 숫자는 게시 후보가 되지 않습니다.',
-    before: '"175% 증가"',
-    result: 'NUMBER_UNSUPPORTED → BLOCKED',
-    detail: '출처 근거가 없는 정량 Claim은 규칙 기반 검증에서 차단합니다.',
+    label: 'QUEUE LINEAGE V2',
+    title: '출처 연결이 깨진 콘텐츠는 게시 후보가 되지 않습니다.',
+    before: 'source metadata / schema / lineage hash',
+    result: 'ATTESTED OR BLOCKED',
+    detail: 'legacy·malformed·hash mismatch 항목은 fail-closed로 격리합니다.',
   },
   {
-    label: 'TEST ISOLATION',
-    title: '검증 과정이 운영 DB를 건드리지 않습니다.',
-    before: 'pytest / sandbox',
-    result: 'production DB mutation → 0',
-    detail: '동적 DB 경로 주입과 테스트 격리로 운영 데이터 오염을 방지했습니다.',
+    label: 'FACT CHECKER V2',
+    title: '근거 없는 숫자와 의미 왜곡을 서로 다른 방식으로 검사합니다.',
+    before: 'claim + evidence',
+    result: 'DETERMINISTIC + SEMANTIC',
+    detail: '명확한 오류는 코드로, 문맥 왜곡은 Semantic Critic으로 다시 확인합니다.',
   },
   {
     label: 'PUBLISH BOUNDARY',
-    title: '품질 강화 버전은 자동 게시를 일부러 막아두었습니다.',
-    before: 'Meta / Instagram API',
-    result: 'external publish → DISABLED',
-    detail: '현재 hardened branch는 외부 발행보다 검증 완결성을 우선한 Dry-run 상태입니다.',
+    title: '원격 게시가 불확실하면 자동으로 다시 보내지 않습니다.',
+    before: 'durable attempt / remote id',
+    result: 'UNCERTAIN → STOP',
+    detail: 'stale·uncertain attempt는 자동 reset·자동 retry하지 않습니다.',
+  },
+  {
+    label: 'INSTAGRAM AUTH',
+    title: 'Queue를 꺼내기 전에 게시 계정부터 확인합니다.',
+    before: 'Instagram Login / read-only /me',
+    result: 'ACCOUNT MATCH REQUIRED',
+    detail: '자격증명과 계정 불일치는 Queue 상태를 건드리기 전에 fail-closed 처리합니다.',
   },
 ];
 
@@ -43,36 +51,27 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#090909] text-zinc-100">
       <Header />
-
       <main>
         <section className="max-w-6xl mx-auto px-6 pt-36 pb-24">
           <div className="flex flex-wrap items-center gap-3 mb-8 font-mono text-[10px] tracking-[0.18em] uppercase">
-            <span className="border border-orange-500/50 text-orange-400 px-3 py-1.5">Draft hardening</span>
-            <span className="text-zinc-600">Offline verification</span>
+            <span className="border border-orange-500/50 text-orange-400 px-3 py-1.5">Hardened main</span>
+            <span className="text-zinc-600">Staged rollout</span>
             <span className="text-zinc-700">2026</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_.75fr] gap-14 items-end">
             <div>
-              <p className="text-[11px] font-mono text-zinc-600 tracking-[0.18em] uppercase mb-5">
-                Reliability-aware autonomous content agent
-              </p>
-              <h1
-                className="font-semibold text-zinc-50 leading-[0.88] tracking-[-0.055em]"
-                style={{ fontSize: 'clamp(62px, 10vw, 132px)' }}
-              >
+              <p className="text-[11px] font-mono text-zinc-600 tracking-[0.18em] uppercase mb-5">Evidence-bound autonomous content agent</p>
+              <h1 className="font-semibold text-zinc-50 leading-[0.88] tracking-[-0.055em]" style={{ fontSize: 'clamp(62px, 10vw, 132px)' }}>
                 ALGO<br />PIPELINE
               </h1>
             </div>
             <div className="pb-2">
               <p className="text-xl text-zinc-300 leading-relaxed tracking-tight">
-                콘텐츠를 많이 만드는 자동화보다,
-                <br />
-                <span className="text-orange-400">잘못된 결과를 멈출 수 있는 시스템</span>을 만들었습니다.
+                생성량보다,<br /><span className="text-orange-400">검증 가능한 운영 경계</span>를 먼저 만들었습니다.
               </p>
               <p className="text-sm text-zinc-600 leading-relaxed mt-6 max-w-md">
-                기존 카드뉴스 자동화 파이프라인을 Quality Gate, 실패 상태, DB 격리,
-                재시도 정책과 실험 지표를 갖춘 Reliability Engineering 사례로 재구성했습니다.
+                뉴스 수집 → 근거 기반 생성 → 검증 → 사람 승인 → 게시 상태 기록을 하나의 fail-closed 흐름으로 연결했습니다.
               </p>
             </div>
           </div>
@@ -93,14 +92,9 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-[.7fr_1.3fr] gap-16">
               <div>
                 <p className="text-[11px] font-mono text-orange-500 tracking-[0.16em] uppercase mb-4">System flow</p>
-                <h2 className="text-3xl lg:text-5xl font-semibold tracking-[-0.04em] leading-tight">
-                  Generate 다음에<br />Verify를 둡니다.
-                </h2>
-                <p className="text-sm text-zinc-600 leading-relaxed mt-6 max-w-sm">
-                  좋은 프롬프트 하나에 의존하지 않고, 규칙으로 판단할 오류와 의미로 판단할 오류를 분리했습니다.
-                </p>
+                <h2 className="text-3xl lg:text-5xl font-semibold tracking-[-0.04em] leading-tight">Generate 다음에<br />검증과 승인을 둡니다.</h2>
+                <p className="text-sm text-zinc-600 leading-relaxed mt-6 max-w-sm">좋은 프롬프트 하나에 의존하지 않고 근거, 상태, 권한을 각각 확인합니다.</p>
               </div>
-
               <div className="border-y border-[#1f1f1f]">
                 {FLOW.map(([step, title, desc]) => (
                   <div key={step} className="grid grid-cols-[52px_150px_1fr] gap-4 py-6 border-b border-[#171717] last:border-b-0 items-start">
@@ -118,12 +112,10 @@ export default function Home() {
           <div className="max-w-6xl mx-auto px-6 py-24">
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
               <div>
-                <p className="text-[11px] font-mono text-orange-500 tracking-[0.16em] uppercase mb-4">Verified evidence</p>
-                <h2 className="text-3xl lg:text-5xl font-semibold tracking-[-0.04em]">무엇을 막았는지 보여줍니다.</h2>
+                <p className="text-[11px] font-mono text-orange-500 tracking-[0.16em] uppercase mb-4">Verified boundaries</p>
+                <h2 className="text-3xl lg:text-5xl font-semibold tracking-[-0.04em]">무엇을 막는지가 시스템을 설명합니다.</h2>
               </div>
-              <p className="text-xs font-mono text-zinc-700 max-w-sm leading-relaxed">
-                Source: algo-pipeline draft PR #1 / offline audit. 현재 외부 게시 호출은 활성화하지 않았습니다.
-              </p>
+              <p className="text-xs font-mono text-zinc-700 max-w-sm leading-relaxed">Source: algo-pipeline hardened main. Unattended publishing remains disabled by default.</p>
             </div>
 
             <div className="space-y-px bg-[#1a1a1a] border border-[#1a1a1a]">
@@ -134,14 +126,8 @@ export default function Home() {
                     <h3 className="text-xl lg:text-2xl font-medium tracking-tight text-zinc-100 leading-snug">{check.title}</h3>
                   </div>
                   <div className="border border-[#202020] bg-[#0d0d0d] p-5 font-mono">
-                    <div className="grid grid-cols-[90px_1fr] gap-4 text-xs py-2 border-b border-[#1b1b1b]">
-                      <span className="text-zinc-700">INPUT</span>
-                      <span className="text-zinc-400">{check.before}</span>
-                    </div>
-                    <div className="grid grid-cols-[90px_1fr] gap-4 text-xs py-3">
-                      <span className="text-zinc-700">RESULT</span>
-                      <span className="text-orange-400">{check.result}</span>
-                    </div>
+                    <div className="grid grid-cols-[90px_1fr] gap-4 text-xs py-2 border-b border-[#1b1b1b]"><span className="text-zinc-700">INPUT</span><span className="text-zinc-400">{check.before}</span></div>
+                    <div className="grid grid-cols-[90px_1fr] gap-4 text-xs py-3"><span className="text-zinc-700">RESULT</span><span className="text-orange-400">{check.result}</span></div>
                     <p className="text-xs text-zinc-600 leading-relaxed mt-4 font-sans">{check.detail}</p>
                   </div>
                 </article>
@@ -153,43 +139,20 @@ export default function Home() {
         <section className="border-t border-[#1a1a1a]">
           <div className="max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 lg:grid-cols-2 gap-14">
             <div>
-              <p className="text-[11px] font-mono text-orange-500 tracking-[0.16em] uppercase mb-4">Current boundary</p>
-              <h2 className="text-3xl lg:text-5xl font-semibold tracking-[-0.04em] leading-tight">
-                운영 중인 척하지 않습니다.
-              </h2>
+              <p className="text-[11px] font-mono text-orange-500 tracking-[0.16em] uppercase mb-4">Current experiment</p>
+              <h2 className="text-3xl lg:text-5xl font-semibold tracking-[-0.04em] leading-tight">다음 단계는<br />closed-loop quality입니다.</h2>
             </div>
             <div className="space-y-7 text-sm text-zinc-500 leading-relaxed">
-              <p>
-                과거에는 Windows Task Scheduler와 Instagram Graph API를 이용한 자동 발행 흐름을 운영했지만,
-                현재 품질 강화 브랜치는 실제 외부 게시를 차단한 Dry-run 상태입니다.
-              </p>
-              <p>
-                이 콘솔은 현재 시점의 시스템 경계를 그대로 보여주기 위해 만들어졌습니다. 예전 사이트의
-                “매일 자동 업로드 중” 같은 표현은 더 이상 사용하지 않습니다.
-              </p>
+              <p>현재 Draft PR #7에서는 근거 기반 생성 → 사람 편집·승인 → Instagram 성과 snapshot → 주간 품질 회고 → 승인 대기 실험 제안을 연결하고 있습니다.</p>
+              <p>Draft 기능과 main 완료 기능을 섞지 않습니다. 실제 카드뉴스 샘플의 시각 검토 전에는 병합하지 않도록 경계를 유지하고 있습니다.</p>
               <div className="flex flex-wrap gap-3 pt-3">
-                <a
-                  href="https://github.com/YunhuPark/algo-pipeline/pull/1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex border border-orange-500/50 text-orange-400 hover:bg-orange-500 hover:text-black px-5 py-3 text-xs font-mono transition-colors"
-                >
-                  Inspect hardening PR ↗
-                </a>
-                <a
-                  href="https://github.com/YunhuPark/algo-pipeline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex border border-[#2a2a2a] text-zinc-400 hover:border-zinc-500 hover:text-zinc-100 px-5 py-3 text-xs font-mono transition-colors"
-                >
-                  Repository ↗
-                </a>
+                <a href="https://github.com/YunhuPark/algo-pipeline/pull/7" target="_blank" rel="noopener noreferrer" className="inline-flex border border-orange-500/50 text-orange-400 hover:bg-orange-500 hover:text-black px-5 py-3 text-xs font-mono transition-colors">Inspect active Draft #7 ↗</a>
+                <a href="https://github.com/YunhuPark/algo-pipeline" target="_blank" rel="noopener noreferrer" className="inline-flex border border-[#2a2a2a] text-zinc-400 hover:border-zinc-500 hover:text-zinc-100 px-5 py-3 text-xs font-mono transition-colors">Repository ↗</a>
               </div>
             </div>
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );
